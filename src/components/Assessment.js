@@ -48,7 +48,6 @@ export default function Assessment() {
     const vigourLevel = parseInt(data.vigourLevel) || 5;
     const autoTheme = getAutoTheme(data.lightSensitivity, data.approachPreference, woundLevel);
     setChosenTheme(autoTheme);
-
     const happinessBase = Math.round((vigourLevel / 10) * 40 + 10 + (10 - woundLevel) * 3);
 
     const prompt = `A person named ${data.name || 'friend'} (${ageGroup}, age ${ageNum}) completed a wellness assessment.

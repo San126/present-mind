@@ -122,7 +122,6 @@ Greet ${profile.name || 'the user'} in 2 warm sentences. Ask ONE gentle opening 
             <div className="typing"><span /><span /><span /></div>
           </div>
         )}
-
         {messages.map((msg, i) => (
           <div key={i} className={msg.role === 'ai' ? 'ai-bubble chat-bubble fade-in' : 'user-bubble chat-bubble'}>
             {msg.text === '...'
