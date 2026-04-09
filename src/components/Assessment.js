@@ -260,8 +260,8 @@ Write a warm, honest 3-sentence personal summary for them. Acknowledge where the
               </div>
               <p style={{ fontSize: 12, color: 'var(--primary)', marginTop: 6, fontWeight: 500 }}>
                 {(data.woundLevel || 5) > 7 ? '💙 We will be very gentle and go slowly' :
-                 (data.woundLevel || 5) > 4 ? '🌿 We\'ll be supportive and build at your pace' :
-                 '🌱 You have room to grow — let\'s use that'}
+                  (data.woundLevel || 5) > 4 ? '🌿 We\'ll be supportive and build at your pace' :
+                    '🌱 You have room to grow — let\'s use that'}
               </p>
             </div>
 
@@ -291,19 +291,39 @@ Write a warm, honest 3-sentence personal summary for them. Acknowledge where the
             <p style={{ marginBottom: 16 }}>Some people are sensitive to bright screens. Let me know what feels comfortable.</p>
 
             <div>
-              <p style={{ fontWeight: 600, marginBottom: 10, color: 'var(--text)', fontSize: 14 }}>How sensitive are you to screen brightness?</p>
+              <p style={{ fontWeight: 600, marginBottom: 10, color: 'var(--text)', fontSize: 14 }}>
+                How sensitive are you to screen brightness?
+              </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {[
-                  { v: 'low', e: '🌑', label: 'Sensitive — prefer dim, dark screens' },
-                  { v: 'medium', e: '🌤️', label: 'Moderate — normal screens are fine' },
-                  { v: 'high', e: '☀️', label: 'Low sensitivity — I like bright, clear screens' },
+                  { v: 'low', e: '🌑', label: 'Sensitive — prefer dim, dark screens', themeId: 'deep_night' },
+                  { v: 'medium', e: '🌤️', label: 'Moderate — normal screens are fine', themeId: 'calm_forest' },
+                  { v: 'high', e: '☀️', label: 'Low sensitivity — I like bright, clear screens', themeId: 'warm_sunset' },
                 ].map(opt => (
-                  <div key={opt.v} className={`option-item ${data.lightSensitivity === opt.v ? 'selected' : ''}`} style={{ padding: '12px 16px' }} onClick={() => set('lightSensitivity', opt.v)}>
-                    <span>{opt.e}</span><span style={{ fontSize: 14 }}>{opt.label}</span>
+                  <div
+                    key={opt.v}
+                    className={`option-item ${data.lightSensitivity === opt.v ? 'selected' : ''}`}
+                    style={{ padding: '12px 16px' }}
+                    onClick={() => {
+                      set('lightSensitivity', opt.v);
+
+                      if (opt.v === 'low') {
+                        updateProfile({ lightSensitivity: 'low', themeId: 'deep_night' });
+                      } else if (opt.v === 'medium') {
+                        updateProfile({ lightSensitivity: 'medium', themeId: 'calm_forest' });
+                      } else if (opt.v === 'high') {
+                        updateProfile({ lightSensitivity: 'high', themeId: 'warm_sunset' });
+                      }
+                    }}
+
+                  >
+                    <span>{opt.e}</span>
+                    <span style={{ fontSize: 14 }}>{opt.label}</span>
                   </div>
                 ))}
               </div>
             </div>
+
 
             <div style={{ marginTop: 20 }}>
               <p style={{ fontWeight: 600, marginBottom: 10, color: 'var(--text)', fontSize: 14 }}>
@@ -311,7 +331,7 @@ Write a warm, honest 3-sentence personal summary for them. Acknowledge where the
                 {data.lightSensitivity && (
                   <span style={{ fontSize: 12, color: 'var(--primary)', fontWeight: 400, marginLeft: 8 }}>
                     (auto-suggested: {Object.values(THEMES).find(t => {
-                      const auto = getAutoTheme(data.lightSensitivity, data.approachPreference, parseInt(data.woundLevel)||5);
+                      const auto = getAutoTheme(data.lightSensitivity, data.approachPreference, parseInt(data.woundLevel) || 5);
                       return t === THEMES[auto];
                     })?.name || ''})
                   </span>
@@ -321,7 +341,10 @@ Write a warm, honest 3-sentence personal summary for them. Acknowledge where the
                 {Object.entries(THEMES).map(([id, t]) => (
                   <div
                     key={id}
-                    onClick={() => set('selectedTheme', id)}
+                    onClick={() => {
+                      set('selectedTheme', id);
+                      updateProfile({ themeId: id }); // <-- apply theme immediately
+                    }}
                     style={{
                       background: t.bg,
                       border: `2px solid ${data.selectedTheme === id ? t.primary : 'transparent'}`,
@@ -337,8 +360,11 @@ Write a warm, honest 3-sentence personal summary for them. Acknowledge where the
                   </div>
                 ))}
               </div>
-              <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>You can always change this later in settings.</p>
+              <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>
+                You can always change this later in settings.
+              </p>
             </div>
+
 
             <div style={{ marginTop: 20 }}>
               <button className="btn btn-primary" onClick={finishAssessment} disabled={!data.lightSensitivity}>

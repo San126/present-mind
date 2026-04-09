@@ -66,7 +66,7 @@ export function AppProvider({ children }) {
 
   // Save to localStorage
   useEffect(() => {
-    try { localStorage.setItem('presentMindProfile', JSON.stringify(profile)); } catch {}
+    try { localStorage.setItem('presentMindProfile', JSON.stringify(profile)); } catch { }
   }, [profile]);
 
   // Apply theme — set on BOTH :root AND body AND #root element to ensure override
@@ -100,7 +100,14 @@ export function AppProvider({ children }) {
     }
   }, [theme]);
 
-  const updateProfile = (updates) => setProfile(p => ({ ...p, ...updates }));
+  const updateProfile = (updates) => {
+    setProfile(p => {
+      const newProfile = { ...p, ...updates };
+      try { localStorage.setItem('presentMindProfile', JSON.stringify(newProfile)); } catch { }
+      return newProfile;
+    });
+  };
+
 
   const markActivityDone = (id) => {
     updateProfile({

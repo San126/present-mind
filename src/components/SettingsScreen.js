@@ -97,12 +97,28 @@ export default function SettingsScreen() {
           <p style={{ fontWeight: 700, marginBottom: 10, fontSize: 14 }}>Light sensitivity</p>
           <div style={{ display: 'flex', gap: 8 }}>
             {[{ v: 'low', e: '🌑', l: 'Sensitive' }, { v: 'medium', e: '🌤️', l: 'Normal' }, { v: 'high', e: '☀️', l: 'Low' }].map(opt => (
-              <button key={opt.v} onClick={() => updateProfile({ lightSensitivity: opt.v })} style={{
-                flex: 1, padding: '10px 4px',
-                background: profile.lightSensitivity === opt.v ? 'var(--light)' : 'var(--card)',
-                border: `2px solid ${profile.lightSensitivity === opt.v ? 'var(--primary)' : 'var(--border)'}`,
-                borderRadius: 12, cursor: 'pointer', textAlign: 'center', fontFamily: 'inherit', transition: 'all 0.2s'
-              }}>
+              <button
+                key={opt.v}
+                onClick={() => {
+                  updateProfile({ lightSensitivity: opt.v });
+
+                  // Map sensitivity to a theme
+                  if (opt.v === 'low') {
+                    updateProfile({ themeId: 'deep_night' }); // dark mode
+                  } else if (opt.v === 'medium') {
+                    updateProfile({ themeId: 'calm_forest' }); // normal
+                  } else if (opt.v === 'high') {
+                    updateProfile({ themeId: 'warm_sunset' }); // bright
+                  }
+                }}
+                style={{
+                  flex: 1, padding: '10px 4px',
+                  background: profile.lightSensitivity === opt.v ? 'var(--light)' : 'var(--card)',
+                  border: `2px solid ${profile.lightSensitivity === opt.v ? 'var(--primary)' : 'var(--border)'}`,
+                  borderRadius: 12, cursor: 'pointer', textAlign: 'center',
+                  fontFamily: 'inherit', transition: 'all 0.2s'
+                }}
+              >
                 <div style={{ fontSize: 18 }}>{opt.e}</div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text)', marginTop: 3 }}>{opt.l}</div>
               </button>
